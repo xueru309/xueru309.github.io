@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>薄巧小日记</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#68a98b">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  }
+
+  :root {
+    --mint-50: #f2f7f4;
+    --mint-100: #e2eee6;
+    --mint-200: #c5dfd2;
+    --mint-300: #9dcaae;
+    --mint-500: #68a98b;
+    --mint-700: #3f7f66;
+    --choco-700: #4b3a32;
+    --choco-500: #6f5a4f;
+    --choco-300: #a58b7d;
+    --choco-100: #d9cfc7;
+    --paper: #fbfaf7;
+    --line: #e6efe8;
+    --text: #3d4a43;
+    --muted: #7f8f86;
+    --danger: #d96b6b;
+  }
+
+  body {
+    background: linear-gradient(160deg, var(--mint-50) 0%, var(--paper) 100%);
+    color: var(--text);
+    padding: 16px;
+    max-width: 640px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    padding: 18px 0 12px;
+  }
+
+  h1 {
+    font-size: 24px;
+    color: var(--choco-700);
+    letter-spacing: 1px;
+  }
+
+  .subtitle {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 6px 18px rgba(83, 121, 102, 0.08);
+  }
+
+  .write-box {
+    margin-top: 14px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 110px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 15px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    resize: vertical;
+    line-height: 1.6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  textarea:focus {
+    border-color: var(--mint-300);
+    box-shadow: 0 0 0 4px rgba(157, 202, 174, 0.25);
+  }
+
+  .row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .btn {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--mint-500);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--mint-700);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--choco-500);
+    border: 1px solid var(--choco-100);
+  }
+
+  .btn-ghost:hover {
+    background: var(--choco-100);
+  }
+
+  .search-box {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px 14px;
+  }
+
+  .search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: transparent;
+    color: var(--text);
+  }
+
+  .result-bar {
+    margin: 12px 4px 0;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex: justify-content: space-between;
+  }
+
+  .note-list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .note-item {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--mint-300);
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 14px rgba(83, 121, 102, 0.06);
+    transition: transform 0.15s;
+  }
+
+  .note-item:hover {
+    transform: translateY(-1px);
+  }
+
+  .note-time {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .note-content {
+    font-size: 15px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text);
+  }
+
+  .note-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .tag-date {
+    font-size: 12px;
+    color: var(--choco-500);
+    background: var(--choco-100);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  .btn-del {
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+
+  .btn-del:hover {
+    text-decoration: underline;
+  }
+
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 40px 16px;
+    font-size: 14px;
+  }
+
+  .highlight {
+    background: #fff3c4;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 24px;
+    padding-bottom: 10px;
+  }
+</style>
+</head>
+
+<body>
+  <header>
+    <h1>🍃 薄巧小日记</h1>
+    <p class="subtitle">把每天的想法随手记下来</p>
+  </header>
+
+  <div class="card write-box">
+    <textarea id="noteInput" placeholder="今天想到了什么？写在这里吧……"></textarea>
+    <div class="row">
+      <button class="btn btn-ghost" onclick="clearInput()">清空内容</button>
+      <button class="btn btn-primary" onclick="saveNote()">记下这条</button>
+    </div>
+  </div>
+
+  <div class="search-box">
+    <span>🔍</span>
+    <input id="searchInput" type="text" placeholder="搜索日记内容……" />
+  </div>
+
+  <div class="result-bar">
+    <span id="resultInfo">共 0 条记录</span>
+    <div>
+      <button class="btn-del" onclick="exportTxt()">导出备份</button>
+      <button class="btn-del" onclick="clearAllNotes()">清空全部</button>
+    </div>
+  </div>
+
+  <div class="note-list" id="noteList"></div>
+
+  <footer>数据保存在本地浏览器 · 记得定期导出备份</footer>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+
+    const STORAGE_KEY = "mint_choco_diary_notes";
+
+    const noteInput = document.getElementById("noteInput");
+    const searchInput = document.getElementById("searchInput");
+    const noteList = document.getElementById("noteList");
+    const resultInfo = document.getElementById("resultInfo");
+
+    function getNotes() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function formatDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const hh = String(date.getHours()).padStart(2, "0");
+      const mm = String(date.getMinutes()).padStart(2, "0");
+      return `${y}-${m}-${d} ${hh}:${mm}`;
+    }
+
+    function getDateTag(date) {
+      const today = new Date();
+      const d = new Date(date);
+      const isToday =
+        d.getFullYear() === today.getFullYear() &&
+        d.getMonth() === today.getMonth() &&
+        d.getDate() === today.getDate();
+
+      if (isToday) return "今天";
+
+      const yesterday = new Date();
+      yesterday.setDate(today.getDate() - 1);
+      const isYesterday =
+        d.getFullYear() === yesterday.getFullYear() &&
+        d.getMonth() === yesterday.getMonth() &&
+        d.getDate() === yesterday.getDate();
+
+      return isYesterday ? "昨天" : `${d.getMonth() + 1}月${d.getDate()}日`;
+    }
+
+    function highlightText(text, keyword) {
+      if (!keyword) return escapeHtml(text);
+      const safe = escapeHtml(keyword);
+      const regex = new RegExp(`(${safe})`, "gi");
+      return escapeHtml(text).replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function saveNote() {
+      const text = noteInput.value.trim();
+      if (!text) {
+        alert("写点东西再保存哦～");
+        return;
+      }
+
+      const notes = getNotes();
+      notes.unshift({
+        id: Date.now(),
+        time: new Date().toLocaleString("zh-CN"),
+        date: new Date().toISOString(),
+        text: text
+      });
+
+      saveNotes(notes);
+      noteInput.value = "";
+      render();
+    }
+
+    function deleteNote(id) {
+      if (!confirm("确定删除这条日记吗？")) return;
+      const notes = getNotes().filter((n) => n.id !== id);
+      saveNotes(notes);
+      render();
+    }
+
+    function clearAllNotes() {
+      if (!confirm("确定清空全部日记吗？此操作无法恢复。")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+
+    function clearInput() {
+      noteInput.value = "";
+    }
+
+    function exportTxt() {
+      const notes = getNotes();
+      if (notes.length === 0) {
+        alert("没有日记可以导出");
+        return;
+      }
+      let out = "【薄巧小日记备份】\n\n";
+      notes.forEach(item=>{
+        out += `⏰ ${item.time}\n${item.text}\n——————————\n\n`
+      })
+      const blob = new Blob([out], {type:"text/plain;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "薄巧日记备份.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function render() {
+      const notes = getNotes();
+      const keyword = searchInput.value.trim().toLowerCase();
+
+      const filtered = notes.filter((n) =>
+        n.text.toLowerCase().includes(keyword)
+      );
+
+      resultInfo.textContent = keyword
+        ? `匹配 ${filtered.length} 条记录`
+        : `共 ${notes.length} 条记录`;
+
+      if (filtered.length === 0) {
+        noteList.innerHTML = `
+          <div class="empty">
+            ${notes.length === 0 ? "还没有日记，写点什么吧～" : "没有找到匹配的内容"}
+          </div>`;
+        return;
+      }
+
+      noteList.innerHTML = filtered
+        .map(
+          (n) => `
+          <div class="note-item">
+            <div class="note-time">⏰ ${n.time}</div>
+            <div class="note-content">${highlightText(n.text, keyword)}</div>
+            <div class="note-footer">
+              <span class="tag-date">${getDateTag(new Date(n.date))}</span>
+              <button class="btn-del" onclick="deleteNote(${n.id})">删除</button>
+            </div>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    searchInput.addEventListener("input", render);
+    noteInput.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        saveNote();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
