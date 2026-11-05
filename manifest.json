@@ -1,0 +1,8 @@
+{
+  "name": "薄巧日记本",
+  "short_name": "薄巧日记",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#87c8b8"
+}
